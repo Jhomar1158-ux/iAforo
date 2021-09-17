@@ -1,11 +1,11 @@
 # Importamos las librerías numpy y openCv
 import numpy as np
 import cv2
- 
+import time
+
 # Inicialiazamos el HOG descriptor o el detector de personas
 hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-
 cv2.startWindowThread()
 
 # Abrimos la WebCam de nuestra PC
@@ -31,6 +31,11 @@ while(True):
     # Nos retorna los Marcos delimitantes 
     boxes, weights = hog.detectMultiScale(frame, winStride=(8,8) )
     # Cada uno con diferente tamaño 
+
+    '''Tiempo de ejecución'''
+    formato="%c"
+    ahora=time.strftime(formato)
+    inicio=time.time()
     # Almacenamos estos Marcos en la variables boxes, Coordenadas
     boxes = np.array([[x, y, x + w, y + h] for (x, y, w, h) in boxes])
 
@@ -41,6 +46,9 @@ while(True):
     out.write(frame.astype('uint8'))
     # Mostramos los Marcos
     cv2.imshow('frame',frame)
+    fin=time.time()
+    print(f'{ahora} | {fin-inicio}')
+
     # Para finalizar el programa usamos la tecla "q" de quit
     if cv2.waitKey(1) & 0xFF == ord('q'):
         # Rompemos el bucle while
